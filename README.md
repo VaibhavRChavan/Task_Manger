@@ -61,15 +61,7 @@ It is built using modern web technologies with a focus on **scalability, maintai
 
 ---
 
-## 📂 Project Structure
-task-manager/
-├── images/
-│ ├── Dashboard.jpg
-│ ├── Tasks.jpg
-│ └── MongoDB.jpg
-├── backend/
-├── frontend/
-└── README.md
+
 
 
 
