@@ -1,7 +1,8 @@
 asgiref==3.11.0
+dataclasses==0.6
 Django==6.0
+djongo==1.2.31
 dnspython==2.8.0
 pymongo==4.15.5
-python-dotenv==1.2.1
-sqlparse==0.5.4
-tzdata==2025.2
+sqlparse==0.5.5
+tzdata==2025.3
