@@ -1,15 +1,16 @@
 from pathlib import Path
+from decouple import config
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Security Settings
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-#o)i9#j9k&(phe+w&124q8fyb3zn_j*eq9$k*o5rh&!#4l$6(*')
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-SECRET_KEY = 'django-insecure-#o)i9#j9k&(phe+w&124q8fyb3zn_j*eq9$k*o5rh&!#4l$6(*'
+ALLOWED_HOSTS = ['*']  # In production, specify your domain
 
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']  # Change in production
-
-
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -23,9 +24,9 @@ INSTALLED_APPS = [
     'apps.tasks.apps.TasksConfig',
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add WhiteNoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -34,14 +35,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 ROOT_URLCONF = 'config.urls'
-
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # ✅ FIXED
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -53,12 +52,10 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # ==========================
-# DATABASE (MongoDB)
+# DATABASE (SQLite for Auth)
 # ==========================
 DATABASES = {
     'default': {
@@ -67,7 +64,11 @@ DATABASES = {
     }
 }
 
-
+# ==========================
+# MongoDB Configuration
+# ==========================
+MONGODB_URI = config('MONGODB_URI', default='mongodb+srv://vivekghule777:password@taskcluster.y2hepor.mongodb.net/task_manager?appName=TaskCluster')
+MONGO_DB_NAME = config('MONGO_DB_NAME', default='task_manager')
 
 # ==========================
 # AUTH CONFIG
@@ -82,7 +83,6 @@ LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/auth/login/'
 
-
 # ==========================
 # PASSWORD VALIDATION
 # ==========================
@@ -93,7 +93,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # ==========================
 # INTERNATIONALIZATION
 # ==========================
@@ -102,14 +101,25 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-
 # ==========================
 # STATIC FILES
 # ==========================
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # For production
+STATICFILES_DIRS = [BASE_DIR / 'static'] if os.path.exists(BASE_DIR / 'static') else []
 
+# WhiteNoise configuration for serving static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-MONGODB_URI = "mongodb://localhost:27017"
-MONGO_DB_NAME = "task_manager"
+
+# ==========================
+# Security Settings for Production
+# ==========================
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'

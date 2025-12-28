@@ -1,22 +1,36 @@
-# Virtual Environment
-venv/
-.env/
+chmod +x build.sh
+```
 
-# Python cache files
-__pycache__/
+### Step 6: Update .gitignore
+
+Create/update `.gitignore`:
+```
+# Python
 *.pyc
-*.pyo
-*.pyd
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
 
-# Environment variables
+# Django
+db.sqlite3
+db.sqlite3-journal
+/staticfiles/
+/media/
+
+# Environment
 .env
-.env.local
+.venv
+env/
+venv/
 
-# IDE and editor settings
+# IDE
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
