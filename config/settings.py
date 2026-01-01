@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     # Local apps
     'apps.users.apps.UsersConfig',
     'apps.tasks.apps.TasksConfig',
+    'apps.meetings'
 ]
 
 MIDDLEWARE = [
